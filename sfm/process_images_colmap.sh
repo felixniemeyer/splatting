@@ -46,7 +46,7 @@ else
 	time colmap image_undistorter \
 		--image_path $image_folder \
 		--input_path $sparse_folder \
-		--output_path $project_folder/dense \
+		--output_path $project_folder/undistorted \
 		--output_type COLMAP \
 		> $project_folder/image_undistorter.log 2>&1
 fi

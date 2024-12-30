@@ -1,0 +1,6 @@
+- erst die 360 grad videos umwandeln in bilder mit fov 60 
+
+
+
+- nach glomap ist ein filtern notwendig:
+colmap image_filterer --input_path sparse/0 --output_path filtered --min_focal_length_ratio 0.5 --max_focal_length_ratio 2  

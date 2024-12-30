@@ -15,7 +15,11 @@ time colmap feature_extractor \
     --image_path $image_folder \
     > $project_folder/feature_extractor.log 2>&1
 
-# no colmap matching
+echo 'matching features'
+time colmap sequential_matcher \
+    --database_path $project_folder/database.db \
+	--SequentialMatching.overlap 20 \
+    > $project_folder/exhaustive_matcher.log 2>&1
 
 mkdir -p $project_folder/sparse
 echo 'glomap matching & mapping'
@@ -28,8 +32,8 @@ time glomap mapper \
 echo 'undistorting'
 time colmap image_undistorter \
     --image_path $image_folder \
-    --input_path $project_folder/sparse \
-    --output_path $project_folder/dense \
+    --input_path $project_folder/sparse/0 \
+    --output_path $project_folder/undistorted \
     --output_type COLMAP \
     > $project_folder/image_undistorter.log 2>&1
 
