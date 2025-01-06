@@ -1,0 +1,17 @@
+splat generation:
+https://github.com/nerfstudio-project/gsplat
+https://github.com/SpectacularAI/3dgs-deblur
+https://github.com/j-alex-hanson/speedy-splat
+
+https://docs.gsplat.studio/main/
+exposure optimaz
+https://github.com/nerfstudio-project/gsplat/pull/291#issuecomment-2235195331
+
+
+vidoe to image:
+https://github.com/Maxiviper117/360-to-planer-images?tab=readme-ov-file#usage
+
+collecting best images from video:
+https://github.com/SharkWipf/nerf_dataset_preprocessing_helper
+https://github.com/shrimbly/Video-to-splat
+
