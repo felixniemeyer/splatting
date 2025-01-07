@@ -8,9 +8,9 @@ parser = argparse.ArgumentParser(description="Extract frames from a video")
 
 parser.add_argument("input", type=str, help="input video")
 parser.add_argument("outdir", type=str, help="output directory")
-parser.add_argument("--res", type=int, default=960, help="resolution")
-parser.add_argument("--rate", type=int, default=0.4, help="frame rate")
-parser.add_argument("--fov", type=int, default=60, help="field of view")
+parser.add_argument("--res", type=int, default=1280, help="resolution")
+parser.add_argument("--rate", type=float, default=0.4, help="frame rate")
+parser.add_argument("--fov", type=int, default=90, help="field of view")
 parser.add_argument("--cam_man", type=int, default=95, help="degree at which the camera man is")
 parser.add_argument("--pitch", type=int, default=0, help="pitch")
 
@@ -67,7 +67,8 @@ for circle in circles:
     for iyaw in range(num):
         perspectives.append(Perspective(circle.pitch, yaw_start + iyaw * deg_step, 0))
 
-command = f'ffmpeg -i "{args.input}" -filter_complex '
+command = "mkdir -p " + args.outdir + " \n"
+command += f'ffmpeg -i "{args.input}" -filter_complex '
 
 filter_complex = "\"\n"
 outputs = ""
@@ -77,7 +78,7 @@ for i, perspective in enumerate(perspectives):
     filter_complex += f"[0:v]v360=input=equirect:output=rectilinear:h_fov={args.fov}:v_fov={args.fov}:pitch={perspective.pitch}:yaw={perspective.yaw}:roll={perspective.roll}:w={args.res}:h={args.res}[v{i}];\n"
     # make folder
 
-    outputs += f"-map \"[v{i}]\" -r $rate \"${args.outdir}/%05d_{i:03d}_{perspective.filename()}.jpg\" \\\n"
+    outputs += f"-map \"[v{i}]\" -r {args.rate} \"{args.outdir}/%05d_{i:03d}_{perspective.filename()}.jpg\" \\\n"
 
 filter_complex += "\" \\\n"
 
