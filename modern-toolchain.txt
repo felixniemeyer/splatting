@@ -6,7 +6,6 @@ https://github.com/colmap/glomap
 HDR-GS instead of 3dgs // ooof, ich glaube das ist ein bisschen schwerer, weil es auch HDR input bilder braucht
 https://github.com/caiyuanhao1998/HDR-GS
 
-
-
 AI-based SfM: 
-https://github.com/cvg/Hierarchical-Localization/?tab=readme-ov-file
+- https://github.com/cvg/Hierarchical-Localization/?tab=readme-ov-file
+- meta VGG-SfM
