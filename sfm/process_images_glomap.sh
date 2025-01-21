@@ -4,12 +4,18 @@ project_folder=$2
 # prompt if folder exists
 if [ -d "$project_folder" ]; then
     echo "Folder already exists: $project_folder"
-    exit 1
+    read -p "Do you want to remove it? (y/n): " confirm
+    if [ "$confirm" = "y" ] || [ "$confirm" = "Y" ]; then
+        rm -rf "$project_folder"
+        echo "Removed folder: $project_folder"
+    else
+        echo "Exiting script."
+        exit 1
+    fi
 fi
 
 # 90 degree => 0.5 focal length factor 
 flf=0.5
-
 
 mkdir -p $project_folder
 
@@ -17,15 +23,19 @@ echo 'extracting features'
 time colmap feature_extractor \
     --database_path $project_folder/database.db \
     --image_path $image_folder \
-    --single_camera_per_folder 1 \
+    --ImageReader.single_camera_per_folder 1 \
 	--ImageReader.default_focal_length_factor $flf \ 
-    > $project_folder/feature_extractor.log 2>&1
+	2>&1 | tee $project_folder/feature_extractor.log 
 
 echo 'matching features'
-time colmap sequential_matcher \
+# time colmap sequential_matcher \
+#     --database_path $project_folder/database.db \
+# 	--SequentialMatching.overlap 20 \
+#     > $project_folder/exhaustive_matcher.log 2>&1
+time colmap vocab_tree_matcher \
     --database_path $project_folder/database.db \
-	--SequentialMatching.overlap 20 \
-    > $project_folder/exhaustive_matcher.log 2>&1
+    --VocabTreeMatching.vocab_tree_path vocab_tree_flickr100K_words32K.bin \
+    2>&1 | tee $project_folder/vocab_tree_matcher.log
 
 mkdir -p $project_folder/sparse
 echo 'glomap matching & mapping'
@@ -33,11 +43,19 @@ time glomap mapper \
     --database_path $project_folder/database.db \
     --image_path $image_folder \
     --output_path $project_folder/sparse \
+    --ba_iteration_num 5 \
+    --skip_pruning 0 \
+    --GlobalPositioning.max_num_iterations 300 \
+    --BundleAdjustment.max_num_iterations 500 \
+	--Thresholds.max_epipolar_error_E=0.5 \
+	--Thresholds.max_epipolar_error_F=1.5 \
+	--Thresholds.max_epipolar_error_H=1.5 \
+	--Thresholds.min_inlier_num=50 \
+	--Thresholds.min_inlier_ratio=0.4 \
+	--Thresholds.max_rotation_error=5 \
     > $project_folder/glomap.log 2>&1
 
-
 # optimization
-
 sparse_folder="$project_folder/sparse/0"
 
 echo 'bundle adjustment'
@@ -94,3 +112,4 @@ time colmap image_undistorter \
 	--output_path $undistorted_dir \
 	--output_type COLMAP \
 	2>&1 | tee $project_folder/image_undistorter.log 
+
