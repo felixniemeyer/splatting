@@ -1,9 +1,9 @@
-- erst die 360 grad videos umwandeln in bilder mit fov 60 
-
-
+- erst die 360 grad videos umwandeln in bilder mit fov 60
+90 grad ist besser (weniger bilder insgesamt)
 
 - nach glomap ist ein filtern notwendig:
 colmap image_filterer --input_path sparse/0 --output_path filtered --min_focal_length_ratio 0.5 --max_focal_length_ratio 2  
-
 oder bei 60 fov z.B.: 
 colmap image_filterer --input_path sparse/0 --output_path filtered-strict --min_focal_length_ratio 0.85 --max_focal_length_ratio 0.88
+!! nicht, wenn man der feature extraction sagt single camera oder single camera per folder
+
